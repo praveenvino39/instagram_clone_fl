@@ -19,12 +19,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _gridViewScrollController
       ..addListener(() {
-        if (_gridViewScrollController.offset <= 275) {
+        if (_gridViewScrollController.offset < 300) {
           _singleChildScrollController.jumpTo(_gridViewScrollController.offset);
         }
-        if (_gridViewScrollController.offset > 275) {
-          _singleChildScrollController.animateTo(275,
+        if (_gridViewScrollController.offset > 300) {
+          _singleChildScrollController.animateTo(300,
               duration: Duration(milliseconds: 50), curve: Curves.easeIn);
+        }
+      });
+    _singleChildScrollController
+      ..addListener(() {
+        print(_singleChildScrollController.offset);
+        if (_singleChildScrollController.offset >= 300) {
+          _singleChildScrollController.jumpTo(300);
         }
       });
   }
@@ -203,16 +210,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onVerticalDragStart: (e) => {},
                     child: StickyHeader(
                       content: Container(
-                          padding:
-                              EdgeInsets.only(right: 5, left: 5, bottom: 100),
-                          height: MediaQuery.of(context).size.height,
+                          padding: EdgeInsets.only(
+                              right: 5, left: 5, top: 5, bottom: 150),
+                          height: MediaQuery.of(context).size.height + 10,
                           child: GridView.builder(
                               shrinkWrap: true,
                               controller: _gridViewScrollController,
-                              itemCount: 15,
+                              itemCount: 20,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
+                                      crossAxisCount: 2,
                                       crossAxisSpacing: 5,
                                       mainAxisSpacing: 5),
                               itemBuilder: (context, index) => ClipRRect(
