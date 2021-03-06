@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:socialapp/Services/Network/auth_api_handler.dart';
 import 'package:socialapp/contant.dart';
 import 'package:socialapp/providers/user_provider.dart';
 import 'package:socialapp/screens/signup_screen.dart';
+import 'package:socialapp/screens/user_profile_screen.dart';
 import 'package:socialapp/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,15 +20,18 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showPassword = false;
   TextEditingController _username = TextEditingController();
   TextEditingController _password = TextEditingController();
+  FlutterSecureStorage _storage = FlutterSecureStorage();
   bool isLoading = false;
   ApiHelper _apiHelper = ApiHelper();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldkey,
         body: SingleChildScrollView(
           physics: ScrollPhysics(),
           child: Padding(
@@ -143,19 +148,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (response["status_code"] == 200) {
                           userProvider.addToken(
                               token: response["data"]["token"]);
+                          await _storage.write(
+                              key: "authToken", value: userProvider.token);
                           setState(() => {
                                 _password.text = "",
                                 _username.text = "",
                                 isLoading = false,
                               });
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (route) => false);
                         }
                         if (response["status_code"] == 400) {
                           setState(() => {isLoading = false});
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (context) {
-                          //     });
-                          print('Invalid credential');
+                          _scaffoldkey.currentState.removeCurrentSnackBar();
+                          _scaffoldkey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Username or password incorrect, Kindly double check it and try again!",
+                                style: GoogleFonts.poppins(),
+                              ),
+                              duration: Duration(seconds: 3),
+                            ),
+                          );
                         }
                       }
                     },

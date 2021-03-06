@@ -7,3 +7,5 @@ Widget height(double height) => SizedBox(
 Widget width(double width) => SizedBox(
       width: width,
     );
+
+double calHeight(context) => MediaQuery.of(context).size.height;

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:socialapp/contant.dart';
 
 class ApiHelper {
-  String baseUrl = 'http://192.168.2.133:8000/';
   String registrationUrl = 'auth/registration/';
   String loginUrl = 'auth/login/';
 
@@ -10,8 +10,7 @@ class ApiHelper {
   Future<Map> registration(
       {String username, String password, BuildContext context}) async {
     try {
-      Response response = await Dio().post(
-          'http://192.168.2.133:8000/auth/registration/',
+      Response response = await Dio().post('$baseUrl$registrationUrl',
           data: {"username": username, "password": password});
       return {"data": response.data, "status_code": response.statusCode};
     } catch (e) {
@@ -21,6 +20,7 @@ class ApiHelper {
     } finally {}
   }
 
+  // USER - LOGIN
   Future<Map> login(
       {String username, String password, BuildContext context}) async {
     try {
@@ -31,7 +31,7 @@ class ApiHelper {
       if (e.response.statusCode == 400) {
         return {"status_code": e.response.statusCode};
       }
-      print(e.toString());
+      return Future(null);
     }
   }
 }

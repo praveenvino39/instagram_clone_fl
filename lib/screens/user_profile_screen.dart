@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socialapp/contant.dart';
+import 'package:socialapp/screens/welcome_screen.dart';
 import 'package:socialapp/utils/utils.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
@@ -29,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     _singleChildScrollController
       ..addListener(() {
-        print(_singleChildScrollController.offset);
         if (_singleChildScrollController.offset >= 300) {
           _singleChildScrollController.jumpTo(300);
         }
@@ -46,14 +47,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           leading: IconButton(
             splashRadius: 20,
             icon: Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () => {},
+            onPressed: () => Navigator.pop(context),
             color: kPrimaryColor,
           ),
           actions: [
             IconButton(
               splashRadius: 20,
               icon: Icon(Icons.more_vert),
-              onPressed: () => {},
+              onPressed: () => {
+                FlutterSecureStorage().delete(key: "authToken"),
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                    (route) => true)
+              },
               color: kPrimaryColor,
             ),
           ],

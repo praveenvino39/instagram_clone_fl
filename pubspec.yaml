@@ -34,6 +34,10 @@ dependencies:
   form_field_validator: ^1.0.1
   provider: ^4.3.3
   sticky_headers: ^0.1.8+1
+  flutter_secure_storage:
+  image_picker:
+  animated_float_action_button: ^1.0.3
+  text_editor: ^0.3.2
 
 dev_dependencies:
   flutter_test:
